@@ -1,0 +1,39 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deploy
+  labels:
+    app: my-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      apptype: web-backend
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        apptype: web-backend
+    spec:
+      containers:
+      - name: my-app
+        image: nidharsan8008/warimage-jenkins1:latest
+        ports:
+        - containerPort: 8080  # Change to 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  labels:
+    app: my-service
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 8080  # Change to 8080
+      port: 8080
+      nodePort: 30078
+  selector:
+    apptype: web-backend
